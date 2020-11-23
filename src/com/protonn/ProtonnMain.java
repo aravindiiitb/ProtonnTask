@@ -27,10 +27,12 @@ public class ProtonnMain {
 
             //Validation
             assertEquals(mcoS.getName(), mcoD.getName());
-            assertEquals(mcoS.getAge(), mcoD.getAge());
+            assertEquals(mcoS.getDob(), mcoD.getDob());
             assertEquals(mcoS.getEmail(), mcoD.getEmail());
             assertEquals(mcoS.getAge(), mcoD.getAge());
             assertEquals(mcoS.getHeight(), mcoD.getHeight());
+
+            System.out.println("All tests passed!");
 
         } catch (IOException i) {
             System.out.println("Something went wrong here " + i.getMessage());

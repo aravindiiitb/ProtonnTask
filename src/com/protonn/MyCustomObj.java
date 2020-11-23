@@ -65,17 +65,16 @@ public class MyCustomObj {
 
     public void deserializeMe(FileInputStream fin) {
         try {
-            int i;
             byte[] buffer = new byte[8];
             StringBuilder sb = new StringBuilder();
-            while ((i = fin.read(buffer)) != -1) {
+            while (fin.read(buffer) != -1) {
                 String temp = new String(buffer);
                 String charVal = ProtonnUtils.convertBinaryToString(temp);
                 sb.append(charVal);
             }
 
             String res = sb.toString();
-            String[] vals = res.split("&");
+            String[] vals = res.split("&"); //Splitting at the delimiter and assigning the values
 
             name = vals[0];
             email = vals[1];
