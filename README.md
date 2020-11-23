@@ -1,9 +1,9 @@
 # ProtonnTask
 In this repository we will implement a custom  Serialization and Deserialization in Java.
 
-ProtonnMain.java is the driver class.
-MyCustomObj.java is the custom pojo which consists of 3 string attrs and 2 Integer atts.
-ProtonnUtils.java contains all the utility methods required for this task.
+ProtonnMain.java is the driver class. <br />
+MyCustomObj.java is the custom pojo which consists of 3 string attrs and 2 Integer atts. <br />
+ProtonnUtils.java contains all the utility methods required for this task. <br />
 
 
 # How to run
