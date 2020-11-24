@@ -1,8 +1,7 @@
 package com.protonn;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.List;
 
 public class MyCustomObj {
     private String name;
@@ -10,6 +9,8 @@ public class MyCustomObj {
     private String dob;
     private Integer age;
     private Integer height;
+
+    private final int serialVersionUID = 9876;
 
     public MyCustomObj() {
     }
@@ -43,47 +44,70 @@ public class MyCustomObj {
     }
 
 
-    public void serializeMe(FileOutputStream fout) {
+    public void serializeMe(List<ByteArrayOutputStream> bos) {
         try {
-            fout.write(ProtonnUtils.convertStringToBinary(name).getBytes());
-            fout.write(ProtonnUtils.convertStringToBinary("&").getBytes()); //Delimiter after every attribute is written
+            ByteArrayOutputStream bosSUID = new ByteArrayOutputStream();
+            bosSUID.write(String.valueOf(serialVersionUID).getBytes());
+            bos.add(bosSUID);
 
-            fout.write(ProtonnUtils.convertStringToBinary(email).getBytes());
-            fout.write(ProtonnUtils.convertStringToBinary("&").getBytes()); //Delimiter after every attribute is written
+            ByteArrayOutputStream bosName = new ByteArrayOutputStream();
+            bosName.write(name.getBytes());
+            bos.add(bosName);
 
-            fout.write(ProtonnUtils.convertStringToBinary(dob).getBytes());
-            fout.write(ProtonnUtils.convertStringToBinary("&").getBytes()); //Delimiter after every attribute is written
+            ByteArrayOutputStream bosEmail = new ByteArrayOutputStream();
+            bosEmail.write(email.getBytes());
+            bos.add(bosEmail);
 
-            fout.write(ProtonnUtils.convertIntegerToBinary(age).getBytes());
-            fout.write(ProtonnUtils.convertStringToBinary("&").getBytes()); //Delimiter after every attribute is written
+            ByteArrayOutputStream bosDob = new ByteArrayOutputStream();
+            bosDob.write(dob.getBytes());
+            bos.add(bosDob);
 
-            fout.write(ProtonnUtils.convertIntegerToBinary(height).getBytes());
+            ByteArrayOutputStream bosAge = new ByteArrayOutputStream();
+            bosAge.write(String.valueOf(age).getBytes());
+            bos.add(bosAge);
+
+            ByteArrayOutputStream bosHeight = new ByteArrayOutputStream();
+            bosHeight.write(String.valueOf(height).getBytes());
+            bos.add(bosHeight);
+
         } catch (IOException e) {
             System.out.println("Something went wrong here " + e.getMessage());
         }
     }
 
-    public void deserializeMe(FileInputStream fin) {
-        try {
-            byte[] buffer = new byte[8];
-            StringBuilder sb = new StringBuilder();
-            while (fin.read(buffer) != -1) {
-                String temp = new String(buffer);
-                String charVal = ProtonnUtils.convertBinaryToString(temp);
-                sb.append(charVal);
+    public void deserializeMe(List<ByteArrayOutputStream> bisLst) {
+
+        for(int i=0;i<bisLst.size();i++) {
+            String str = ProtonnUtils.getStringFromBIS(bisLst.get(i));
+            boolean flag = false;
+            switch (i) {
+                case 0:
+                    if (serialVersionUID != Integer.parseInt(str)) {
+                        flag = true;
+                        System.out.println("Invalid Class Exception. Please contact serializer for updated class!");
+                    }
+                    break;
+                case 1:
+                    name = str;
+                    break;
+                case 2:
+                    email = str;
+                    break;
+                case 3:
+                    dob = str;
+                    break;
+                case 4:
+                    age = Integer.parseInt(str);
+                    break;
+                case 5:
+                    height = Integer.parseInt(str);
+                    break;
+                default:
+                    System.out.println("Index out of bound. Please check the value");
+                    break;
             }
-
-            String res = sb.toString();
-            String[] vals = res.split("&"); //Splitting at the delimiter and assigning the values
-
-            name = vals[0];
-            email = vals[1];
-            dob = vals[2];
-            age = ProtonnUtils.binaryToDecimal(ProtonnUtils.convertStringToBinary(vals[3]));
-            height = ProtonnUtils.binaryToDecimal(ProtonnUtils.convertStringToBinary(vals[4]));
-
-        } catch (IOException e) {
-            System.out.println("Something went wrong here " + e.getMessage());
+            if(flag)
+                break;
         }
     }
 }

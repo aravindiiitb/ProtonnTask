@@ -1,5 +1,9 @@
 package com.protonn;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
+
 public class ProtonnUtils {
     /*
         This method converts a string to binary
@@ -62,5 +66,22 @@ public class ProtonnUtils {
         }
 
         return dec_value;
+    }
+
+    public static byte[] longToBytes(long x) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(0, x);
+        return buffer.array();
+    }
+
+    public static String getStringFromBIS(ByteArrayOutputStream bos) {
+        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+        int c;
+        StringBuilder sb = new StringBuilder();
+        while ((c = bis.read()) != -1) {
+            sb.append((char) c);
+        }
+        String res = sb.toString();
+        return res;
     }
 }
