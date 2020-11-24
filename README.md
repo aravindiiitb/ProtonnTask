@@ -11,10 +11,11 @@ Run the ProtonnMain.java
 
 # Serialization Logic
 Step 1: Init MyCustomObj with any values of your choice. <br />
-Step 2: Convert every attr of the object created in the above step to 8-bit binary and write it to a file. Also, insert a 8-bit binary version of delimiter. 
+Step 2: Init List<ByteArrayOutputStream> object. <br>
+Step 3: First convert serialVersionUID to bytes and add write it to ByteArrayOutputStream. Then Add that object to List<ByteArrayOutputStream> <br/>
+Step 4: Repeat the same above step for rest of the attributes. <br/>
 
 # Deserialization Logic
-Step 1: Read the file in chunks on 8bits. <br />
-Step 2: convert the 8bits to string. <br />
-Step 3: Split the derived string at &. <br /> 
-Step 4: Assign them in the same order as serialized. <br />  
+Step 1: Loop through the List<ByteArrayOutputStream> that is received from the above serialization step. <br/>
+Step 2: First check if this.serialVersionUID is same as what is received. <br/>
+Step 3: If above step is success, then deserailize the rest of the attrs, in the same way they were serialized. <br/>  
